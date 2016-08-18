@@ -1,0 +1,17 @@
+Package: RRotF
+Type: Package
+Title: Random Rotation Forests
+Version: 0.1.0
+Author: Arnu Pretorius
+Maintainer: Arnu Pretorius <arnupretorius@gmail.comt>
+Description: Fits a rotation forest as proposed by Rodriguez et al. (2006)
+    with randomised trees using orthogonal or oblique splits as base learners.
+    The package is restricted to binary classification. (Code largely based on
+    `RotationForest` package.)
+License: MIT
+LazyData: TRUE
+Import: caret,
+    randomForest,
+    rpart,
+    obliqueRF
+RoxygenNote: 5.0.1

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Predict method for RRotF objects.\n#'\n#' Prediction of new observations using RRotF model.\n#' @param object An object of class \\code{RRotF}, as created by the function \\code{RRotF}.\n#' @param newdata A data frame with the same predictors as in the training data.\n#' @param type Type of prediction: 'prob' for probabilities and 'class' for class labels.\n#' @return A vector containing either predicted class probabilities or labels.\n#' @author Arnu Pretorius: \\email{arnupretorius@gmail.com}\n#' @references Rodriguez, J.J., Kuncheva, L.I., 2006. Rotation forest: A new classifier ensemble method. IEEE Trans. Pattern Anal. Mach. Intell. 28, 1619-1630. doi:10.1109/TPAMI.2006.211\n#' @seealso \\code{\\link{RRotF}}\n#' @examples\n#' library(ElemStatLearn)\n#' library(caret)\n#' data(\"SAheart\")\n#' trainIndex <- createDataPartition(SAheart$chd, p=0.6, list=FALSE)\n#' train <- SAheart[trainIndex,]\n#' test <- SAheart[-trainIndex,]\n#' Xtrain <- train[,-10]\n#' ytrain <- train[,10]\n#' Xtest <- test[,-10]\n#' ytest <- test[,10]\n#' mod <- RRotF(Xtrain, ytrain, model=\"log\")\n#' preds <- predict(mod, Xtest)\n#' error <- mean(preds != ytest)\n#' error\n#' @export\npredict.RRotF <- function (object, newdata, type=\"class\"){\n      if(class(object) != \"RRotF\"){\n            stop(\"Object must be of class 'RRotF'\")\n      }\n      newdata <- data.frame(sapply(newdata, as.numeric))\n      if (!identical(colnames(newdata), object$columnnames))\n            stop(\"Variable names and/or order of variables in newdata is not identical to training set. Please check if variables are exactly the same in both sets.\")\n      predicted <- matrix(NA, nrow = nrow(newdata), ncol = length(object$models))\n      for (i in 1:length(object$models)) {\n            final <- data.frame(as.matrix(newdata) %*% as.matrix(object$loadings[[i]]))\n            predicted[, i] <- predict(object$models[[i]], final,\n                                      type = \"prob\")[, 2]\n      }\n      if (type==\"class\") {\n            ifelse(rowMeans(predicted) > 0.5, 1, 0)\n      }\n      else if(type==\"prob\") {\n            rowMeans(predicted)\n      } else {\n            stop(\"Argument 'type' must be either 'class' or 'prob'\")\n      }\n}\n",
+    "created" : 1471539829504.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2463551859",
+    "id" : "E69391A8",
+    "lastKnownWriteTime" : 1471542665,
+    "last_content_update" : 1471542665839,
+    "path" : "~/Google Drive/University/Masters/My Packages/RRotF/R/predictRRotF.R",
+    "project_path" : "R/predictRRotF.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

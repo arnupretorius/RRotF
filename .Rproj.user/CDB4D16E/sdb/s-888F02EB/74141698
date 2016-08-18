@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' k-fold cross-validiation for Random Rotation Forests.\n#'\n#' Performs k-fold cross-validation using specified Random Rotation Forest as prediction model.\n#' @param x Training data input matrix.\n#' @param y Training data response.\n#' @param k Number of folds.\n#' @param seed Specified seed for reproducible folds.\n#' @param verbose Boolean, if true prints progress of k-fold CV runs, if false prints nothing.\n#' @param ... Additional arguments specified to \\code{RRotF}.\n#' @return A list containing the average CV error computed over the folds and the error per fold.\n#' @author Arnu Pretorius <arnupretorius@gmail.com>\n#' @examples\n#' library(ElemStatLearn)\n#' library(caret)\n#' data(\"SAheart\")\n#' trainIndex <- createDataPartition(SAheart$chd, p=0.6, list=FALSE)\n#' train <- SAheart[trainIndex,]\n#' test <- SAheart[-trainIndex,]\n#' Xtrain <- train[,-10]\n#' ytrain <- train[,10]\n#' CVerror <- kFoldRun(Xtrain, ytrain, k=5)\n#' CVerror\n#' @export\n\nkFoldRun <- function(x,y,k=10, seed=1, verbose=TRUE, ...){\n      # Test preparations\n      library(caret)\n      foldError <- NULL\n      CVError <- NULL\n\n      # create folds\n      set.seed(seed)\n      folds <- createFolds(y, k=k, list = FALSE)\n\n      # perform k-fold CV\n      for(i in 1:k){\n            if(verbose){\n                  print(paste(\"fold:\", i))\n            }\n            trainFolds <- folds != i\n            model <- RRotF(x=x[trainFolds,],y=y[trainFolds], ...)\n            preds <- predict.RRotF(model, x[!trainFolds,])\n            foldError[i] <- mean(preds != as.numeric(factor(y[!trainFolds]))-1)\n      }\n      CVError <- mean(foldError)\n      return(list(avgCVError=CVError, perFoldError=foldError))\n}\n",
+    "created" : 1471538782408.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3452548016",
+    "id" : "74141698",
+    "lastKnownWriteTime" : 1471544384,
+    "last_content_update" : 1471544384340,
+    "path" : "~/Google Drive/University/Masters/My Packages/RRotF/R/kFoldRun.R",
+    "project_path" : "R/kFoldRun.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

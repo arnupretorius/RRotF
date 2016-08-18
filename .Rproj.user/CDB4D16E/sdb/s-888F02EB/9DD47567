@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' Tune Random Rotation Forest parameters.\n#'\n#' Finds optimal tuning parameters using k-fold cross-validation.\n#' @param x Training data input matrix.\n#' @param y Training data response.\n#' @param k Number of folds.\n#' @param paraGrid Parameter grid to search over for optimal parameters.\n#' @param verboset Boolean, if true prints progress, otherwise prints nothing.\n#' @param ... Additional arguments specified to \\code{RRotF}.\n#' @return A list containing the optimal tuning parameters and CV errors per fold.\n#' @author Arnu Pretorius <arnupretorius@gmail.com>\n#' @seealso \\code{\\link{kFoldRun}}\n#' @examples\n#' library(ElemStatLearn)\n#' library(caret)\n#' library(grid)\n#' data(\"SAheart\")\n#' trainIndex <- createDataPartition(SAheart$chd, p=0.6, list=FALSE)\n#' train <- SAheart[trainIndex,]\n#' test <- SAheart[-trainIndex,]\n#' Xtrain <- train[,-10]\n#' ytrain <- train[,10]\n#' parameterGrid <- expand.grid(K=round(ncol(Xtrain)/c(2,3), 0), L=c(10,20), mtry=c(1, 3))\n#' optTune <- findOptimalTuning(Xtrain, ytrain, k=5, paraGrid = parameterGrid)\n#' optTune\n#' @export\n\nfindOptimalTuning <- function(x, y, k=10, paraGrid, verboset=TRUE,  ...){\n      CVerrorVec <- NULL\n      nconfig <- nrow(paraGrid)\n      for(i in 1:nconfig){\n            if(verboset){\n                  print(paste(\"para config\",i, \"out of\", nconfig))\n            }\n            K <- paraGrid[i,1]\n            L <- paraGrid[i,2]\n            mtry <- paraGrid[i,3]\n            CVerrorVec[i] <- kFoldRun(x=x, y=y, k=k, K=K, L=L, mtry=mtry, ...)[[1]]\n      }\n      optParaIndex <- which(CVerrorVec == min(CVerrorVec))[1]\n      list(optTuneVals=paraGrid[optParaIndex,], tuneValErrors=data.frame(paraGrid,CVerrorVec))\n}\n",
+    "created" : 1471538250276.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4190483263",
+    "id" : "9DD47567",
+    "lastKnownWriteTime" : 1471544381,
+    "last_content_update" : 1471544381834,
+    "path" : "~/Google Drive/University/Masters/My Packages/RRotF/R/findOptimalTuning.R",
+    "project_path" : "R/findOptimalTuning.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
